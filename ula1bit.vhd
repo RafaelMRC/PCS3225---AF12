@@ -1,0 +1,60 @@
+library IEEE;
+use IEEE.std_logic_1164.all;
+---------------------------------------
+entity ula1bit is
+  port (
+    a           : in  bit;
+    b           : in  bit;
+    cin         : in bit;
+    ainvert     : in bit;
+    binvert     : in bit;
+    operation   : in bit_vector (1 downto 0);
+    result      : out bit;
+    cout        : out bit;
+    overflow    : out bit
+    );
+end entity;
+
+-------------------------------------------------------
+architecture ula1bit_arch of ula1bit is
+    signal a_int, b_int : bit;
+    signal and_result, or_result : bit;
+    signal sum_result : bit;
+
+    component fulladder is
+        port (
+            a, b, cin : in bit;
+            s, cout   : out bit
+        );
+    end component;
+
+    begin
+        -- Inversão condicional
+        a_int <= not a when ainvert = '1' else a;
+        b_int <= not b when binvert = '1' else b;
+
+        -- Operações lógicas
+        and_result <= a_int and b_int;
+        or_result  <= a_int or  b_int;
+
+        -- Soma com FULL ADDER
+        FA: fulladder
+            port map (
+                a    => a_int,
+                b    => b_int,
+                cin  => cin,
+                s    => sum_result,
+                cout => cout
+            );
+
+        -- MUX FINAL (seleciona operação)
+        with operation select
+            result <= and_result when "00",
+                or_result  when "01",
+                sum_result when "10",
+                b_int   when "11",
+                '0'     when others;
+    
+        -- Overflow
+        overflow <= cin xor cout;
+end architecture ula1bit_arch;
