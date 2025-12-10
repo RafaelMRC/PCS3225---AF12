@@ -21,6 +21,9 @@ architecture ula1bit_arch of ula1bit is
     signal and_result, or_result : bit;
     signal sum_result : bit;
 
+     -- Carry interno (substitui leitura do cout)
+    signal cout_i : bit;
+
     component fulladder is
         port (
             a, b, cin : in bit;
@@ -44,17 +47,20 @@ architecture ula1bit_arch of ula1bit is
                 b    => b_int,
                 cin  => cin,
                 s    => sum_result,
-                cout => cout
+                cout => cout_i
             );
 
+        -- Saída final do carry
+        cout <= cout_i;    
+        
         -- MUX FINAL (seleciona operação)
         with operation select
             result <= and_result when "00",
                 or_result  when "01",
                 sum_result when "10",
-                b_int   when "11",
+                b   when "11",
                 '0'     when others;
     
         -- Overflow
-        overflow <= cin xor cout;
+        overflow <= cin xor cout_i;
 end architecture ula1bit_arch;
