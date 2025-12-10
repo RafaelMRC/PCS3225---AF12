@@ -1,6 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+use ieee.numeric_bit.all;
 
 entity memoriaDados is
     generic (
@@ -25,6 +25,7 @@ architecture memoriaDados_arch of memoriaDados is
 
     begin
     process (clock)
+    begin 
         if (clock'event and clock = '1') then -- rising_edge
             if (we = '1') then
                 mem(to_integer(unsigned(addr))) <= dIn;
