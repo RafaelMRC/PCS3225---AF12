@@ -68,7 +68,7 @@ begin
         assert output_tb = "11111100"
         report "Erro no Teste 5" severity error;
 
-        report "✅ Todos os testes passaram!";
+        report "Todos os testes passaram!";
         wait;
     end process;
 
