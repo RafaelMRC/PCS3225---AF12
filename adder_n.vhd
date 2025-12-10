@@ -17,7 +17,7 @@ end entity adder_n;
 architecture adder_n_arch of adder_n is
     signal temp : unsigned(dataSize downto 0); -- cria vetor com 1 bit a mais pra esquerda (datasize em vez de datasize-1)
 begin
-    temp <= ('0' & unsigned(in0)) + ('0' & unsigned(in1)); -- acrescenta 1 bit a esquerda e executa soma
+    temp <= (unsigned("0" & in0)) + (unsigned("0" & in1)); -- acrescenta 1 bit a esquerda e executa soma
     sum  <= bit_vector(temp(dataSize-1 downto 0)); -- so o resultado da soma
     cOut <= temp(dataSize); -- pega apenas carryout
 end architecture;
