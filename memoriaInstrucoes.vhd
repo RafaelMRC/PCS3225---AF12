@@ -19,21 +19,28 @@ architecture memoriaInstrucoes_arch of memoriaInstrucoes is
     type mem_tipo is array (0 to (2**addressSize - 1)) 
     of bit_vector (dataSize-1 downto 0);
 
-    impure function init_mem (datFileName : in string) return mem_tipo is
-        file arquivo : text open read_mode is datFileName;
+    impure function init_mem (nome_do_arquivo : in string) return mem_tipo is
+        file arquivo : text open read_mode is nome_do_arquivo;
         variable linha : line;
         variable temp_bv  : bit_vector (dataSize-1 downto 0);
         variable temp_mem   : mem_tipo;
+        variable i : natural := 0;
     begin
-        for i in 0 to (2**addressSize-1) loop
+        --for i in 0 to mem_tipo'range loop
+            --readline (arquivo, linha);
+            --read (linha, temp_bv);
+            --temp_mem(i) := temp_bv;
+        --end loop;
+        while not endfile (arquivo) loop
             readline (arquivo, linha);
             read (linha, temp_bv);
             temp_mem(i) := temp_bv;
+            i := i + 1;
         end loop;
         return temp_mem;
     end;
 
-    signal mem : mem_tipo := init_mem (datFileName)
+    signal mem : mem_tipo := init_mem (datFileName);
 
     begin
         data <= mem(to_integer(unsigned(addr)));

@@ -18,8 +18,7 @@ begin
         if reset = '1' then
             dado <= (others => '0');
             -- q <= (others => '0');
-        --elsif rising_edge (clock) then
-        elsif (clock'event and clock='1') then
+        elsif rising_edge (clock) then
             if enable = '1' then
                 dado <= d;
                 -- q <= d;
@@ -28,4 +27,3 @@ begin
     end process;
     q <= dado;
 end architecture;
-

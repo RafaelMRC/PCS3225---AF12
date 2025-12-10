@@ -1,5 +1,7 @@
 library ieee;
+use IEEE.numeric_bit.all;
 use ieee.std_logic_1164.all;
+use std.textio.all;
 
 entity tb_memoriaInstrucoes is
 end entity;
