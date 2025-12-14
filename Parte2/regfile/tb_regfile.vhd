@@ -12,6 +12,8 @@
 
 library ieee;
 use ieee.numeric_bit.all;
+library std;
+use std.env.all;
 
 entity tb_regfile is
 end entity;
@@ -144,7 +146,8 @@ begin
 
     ----------------------------------------------------
     report "=== TODOS OS TESTES FINALIZADOS COM SUCESSO ===";
-    wait;
+    wait for 10 ns;
+    stop; -- encerra a simulacao
   end process;
 
 end architecture;
