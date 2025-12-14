@@ -89,8 +89,11 @@ architecture estrutural of regfile is
     );
     end component;
 
-    signal s_decod  : bit_vector(31 downto 0);  -- saida do decodificador
-    signal s_enable : bit_vector(31 downto 0);  -- sinais de escrita de cada registrador
+    signal s_decod       : bit_vector(31 downto 0);  -- saida do decodificador
+    signal s_decod_mask  : bit_vector(31 downto 0);  -- decodificador com X31 bloqueado
+    signal s_enable      : bit_vector(31 downto 0);  -- sinais de escrita de cada registrador
+
+    constant REGWRITE_MASK : bit_vector(31 downto 0) := (31 => '0', others => '1');
 
     signal s_mux1   : bit_vector(63 downto 0); -- multiplexador de saida 1
     signal s_mux2   : bit_vector(63 downto 0); -- multiplexador de saida 2
@@ -102,7 +105,8 @@ architecture estrutural of regfile is
 begin
 
     -- registradores
-    regs: for i in 31 downto 0 generate
+    -- X31 deve permanecer zero; instanciamos registradores apenas para X0..X30
+    regs: for i in 30 downto 0 generate
               regX: reg generic map (dataSize => 64)
                         port map (
                            clock  => clock,
@@ -111,7 +115,8 @@ begin
                            d      => d,
                            q      => s_regs(i)
                         );
-          end generate;
+            end generate;
+        s_regs(31) <= (others => '0');
 
     -- multiplexador 1
     mux1: mux_32x1_n generic map (BITS => 64)
@@ -197,10 +202,9 @@ begin
                saida => s_decod
            );
 
-    -- habilitacao de escrita
-    s_enable <= s_decod when regwrite ='1' else (others => '0');
-    s_regs(31) <= (others => '0'); -- X31 sempre igual a zero
-    s_enable(31) <= '0'; -- X31 não deve aceitar escritas
+    -- habilitacao de escrita (X31 bloqueado)
+    s_decod_mask <= s_decod and REGWRITE_MASK; -- bloqueia escrita em X31 sem deslocar bits
+    s_enable <= s_decod_mask when regwrite ='1' else (others => '0');
 
 
 
