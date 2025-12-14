@@ -52,7 +52,7 @@ entity mux_32x1_n is
     );
 end entity;
 
-architecture comportamental of mux_8x1_n is
+architecture comportamental of mux_32x1_n is
 begin
     SAIDA <= D31 when (SEL = "11111") else
              D30 when (SEL = "11110") else
@@ -88,3 +88,4 @@ begin
              D0 when (SEL = "00000") else
              (others => '0');
 end architecture comportamental;
+
