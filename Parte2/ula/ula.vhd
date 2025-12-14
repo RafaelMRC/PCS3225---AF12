@@ -1,3 +1,13 @@
+-----------------Sistemas Digitais II-------------------------------------
+-- Arquivo   : reg.vhd
+-- Projeto   : AF12 Parte 1 SDII 2025 - biblioteca de componentes para construção de um processador
+-------------------------------------------------------------------------
+-- Autores:     Grupo T2G07     
+--      12684531 Antonio Torres Rocha (Turma 3)
+--      15637418 Guilherme Jun Gondo (Turma 1)
+--      15485340 Rafael Moreno Rachel Carvalho (Turma 1)
+--      15487892 Samuel Henrique de Jesus da Silva (Turma 2)
+-------------------------------------------------------------------------
 
 library IEEE;
 use IEEE.numeric_bit.all;
@@ -32,83 +42,60 @@ architecture ula_arch of ula is
         );
     end component ula1bit;
     
-    type cables is array (0 to 63) of bit;
-    signal carryCable: cables; --FIOS CONECTANDO OS COUT'S DA ALUi AOS CIN'S DA ALUi+1
-    signal zeroCheck: cables; --VERIFICACAO DE ZERO
-    signal ovfCheck: cables; --VERIFICACAO DE OVERFLOW
-    
-    signal check: bit_vector(63 downto 0); --AUXILIAR
-    signal zeroComp: bit_vector(63 downto 0); --AUXILIAR
+    -- Sinais internos
+    signal carry       : bit_vector(64 downto 0); -- ripple carry
+    signal result_int  : bit_vector(63 downto 0); -- resultado interno
 
-    signal subtraction: bit; --COLOCA CIN EM '1' NA PRIMEIRA ALU CASO A SUBTRACAO A-B ESTEJA SELECIONADA
+    signal ainvert_s   : bit;
+    signal binvert_s   : bit;
+    signal operation_s: bit_vector(1 downto 0);
 
-    begin 
+begin
 
-        ALU_GEN: for i in 0 to 63 generate
+    ----------------------------------------------------------------
+    -- Decodificação dos sinais de controle
+    --
+    -- Convenção adotada (compatível com ULA clássica):
+    -- S(3) = Ainvert
+    -- S(2) = Binvert
+    -- S(1 downto 0) = operação
+    ----------------------------------------------------------------
+    ainvert_s    <= S(3);
+    binvert_s    <= S(2);
+    operation_s <= S(1 downto 0);
 
-            LOWERBIT: if i = 0 generate
-                ALU0: alu1bit 
-                port map (
-                    A(0),
-                    B(0),
-                    zeroCheck(63),
-                    subtraction,
-                    check(0),
-                    carryCable(0),
-                    zeroCheck(0),
-                    ovfCheck(0),
-                    S(3),
-                    S(2),
-                    S(1 downto 0)
-                );
-            end generate LOWERBIT;
+    ----------------------------------------------------------------
+    -- Carry inicial
+    -- Para subtração (A + ~B + 1), binvert = 1 e cin inicial = 1
+    ----------------------------------------------------------------
+    carry(0) <= binvert_s;
 
-            MIDBITS: if (i /= 0 and i /= (63)) generate
-                ALUX: alu1bit 
-                port map (
-                    A(i),
-                    B(i),
-                    '0',
-                    carryCable(i-1),
-                    check(i),
-                    carryCable(i),
-                    zeroCheck(i),
-                    ovfCheck(i),
-                    S(3),
-                    S(2),
-                    S(1 downto 0)
-                );
-            end generate MIDBITS;
+    ----------------------------------------------------------------
+    -- Geração das 64 ULAs de 1 bit (ripple-carry)
+    ----------------------------------------------------------------
+    GEN_ALU : for i in 0 to 63 generate
+        ALU_i : ula1bit
+            port map (
+                a         => A(i),
+                b         => B(i),
+                cin       => carry(i),
+                ainvert   => ainvert_s,
+                binvert   => binvert_s,
+                operation => operation_s,
+                result    => result_int(i),
+                cout      => carry(i+1),
+                overflow  => open
+            );
+    end generate GEN_ALU;
 
-            ENDBIT: if (i /= 0 and i = (63)) generate
-                ALUF: alu1bit 
-                port map (
-                    A(63),
-                    B(63),
-                    '0',
-                    carryCable(62),
-                    check(63),
-                    carryCable(63),
-                    zeroCheck(63),
-                    ovfCheck(63),
-                    S(3),
-                    S(2),
-                    S(1 downto 0)
-                );
-            end generate ENDBIT;
+    F <= result_int; -- Saída principal
 
-        end generate ALU_GEN;
+    Co <= carry(64); -- Flag Carry Out (carry do bit mais significativo)
 
-        Ov <= ovfCheck(63);
-        Co <= carryCable(63);
+    -- Flag Overflow (carry into MSB XOR carry out MSB)
+    -- Válido para operações aritméticas
+    Ov <= carry(63) xor carry(64);
 
-        F <= check; 
+    Z <= '1' when result_int = (others => '0') else '0'; -- Flag zero
 
-        zeroComp <= (others => '0');
-
-        Z <= '1' when (check = zeroComp) else
-            '0'; 
-
-        subtraction <= (S(2) and S(1)) or (S(3) and S(2)) ; --CIN = 1 PARA SLT, SUB OU AND
 end architecture ula_arch;
-
