@@ -1,3 +1,15 @@
+-----------------Sistemas Digitais II-------------------------------------
+-- Arquivo   : reg.vhd
+-- Projeto   : AF12 Parte 1 SDII 2025 - biblioteca de componentes para construção de um processador
+-------------------------------------------------------------------------
+-- Autores:     Grupo T2G07     
+--      12684531 Antonio Torres Rocha (Turma 3)
+--      15637418 Guilherme Jun Gondo (Turma 1)
+--      15485340 Rafael Moreno Rachel Carvalho (Turma 1)
+--      15487892 Samuel Henrique de Jesus da Silva (Turma 2)
+-------------------------------------------------------------------------
+
+
 library ieee;
 use ieee.numeric_bit.all;
 
@@ -94,14 +106,14 @@ begin
         rr2 <= bit_vector(to_unsigned(i,5));
 
         regWrite <= '1';
-        wait until rising_edge(clk);
+        wait until clk = '1';
         regWrite <= '0';
         wait for 5 ns;
 
-        if i = 0 then
-          -- X0 deve continuar zero
+        if i = 31 then
+          -- X31 deve continuar zero
           assert q1 = X"0000000000000000"
-            report "ERRO: X0 foi alterado!"
+            report "ERRO: X31 foi alterado!"
             severity error;
         else
           assert q1 = patterns(p)

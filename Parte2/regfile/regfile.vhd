@@ -1,3 +1,13 @@
+-----------------Sistemas Digitais II-------------------------------------
+-- Arquivo   : reg.vhd
+-- Projeto   : AF12 Parte 1 SDII 2025 - biblioteca de componentes para construção de um processador
+-------------------------------------------------------------------------
+-- Autores:     Grupo T2G07     
+--      12684531 Antonio Torres Rocha (Turma 3)
+--      15637418 Guilherme Jun Gondo (Turma 1)
+--      15485340 Rafael Moreno Rachel Carvalho (Turma 1)
+--      15487892 Samuel Henrique de Jesus da Silva (Turma 2)
+-------------------------------------------------------------------------
 
 entity regfile is
     port (
@@ -189,7 +199,9 @@ begin
 
     -- habilitacao de escrita
     s_enable <= s_decod when regwrite ='1' else (others => '0');
-    s_enable(0) <= '0'; -- X0 sempre igual a zero
+    s_regs(31) <= (others => '0'); -- X31 sempre igual a zero
+    s_enable(31) <= '0'; -- X31 não deve aceitar escritas
+
 
 
 end architecture estrutural;
