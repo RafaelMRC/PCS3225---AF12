@@ -1,20 +1,31 @@
+-----------------Sistemas Digitais II-------------------------------------
+-- Arquivo   : reg.vhd
+-- Projeto   : AF12 Parte 1 SDII 2025 - biblioteca de componentes para construção de um processador
+-------------------------------------------------------------------------
+-- Autores:     Grupo T2G07     
+--      12684531 Antonio Torres Rocha (Turma 3)
+--      15637418 Guilherme Jun Gondo (Turma 1)
+--      15485340 Rafael Moreno Rachel Carvalho (Turma 1)
+--      15487892 Samuel Henrique de Jesus da Silva (Turma 2)
+-------------------------------------------------------------------------
+
 library IEEE;
 use IEEE.numeric_bit.all;
 
 entity unidadeControle is
     port (
-        opcode        : out bit_vector(10 downto 0);  -- sinal de condicao codigo da instrucao
-        extendMSB     : in bit_vector(4 downto 0);    -- sinal de controle sign-extend
-        extendLSB     : in bit_vector(4 downto 0);    -- sinal de controle sign-extend
-        reg2loc       : in bit;                       -- sinal de controle MUX Read Register 2
-        regWrite      : in bit;                       -- sinal de controle Write Register
-        aluSrc        : in bit;                       -- sinal de controle MUX entrada B ULA
-        alu_control   : in bit_vector(3 downto 0);    -- sinal de controle da ULA
-        branch        : in bit;                       -- sinal de controle desvio condicional
-        uncondBranch  : in bit;                       -- sinal de controle desvio incondicional
-        memRead       : in bit;                       -- sinal de controle leitura RAM dados
-        memWrite      : in bit;                       -- sinal de controle escrita RAM dados
-        memToReg      : in bit                        -- sinal de controle MUX Write Data
+        opcode        : in  bit_vector (10 downto 0); -- sinal de condicao codigo da instrucao
+        extendMSB     : out bit_vector (4 downto 0);  -- sinal de controle sign-extend
+        extendLSB     : out bit_vector (4 downto 0);  -- sinal de controle sign-extend
+        reg2loc       : out bit;                      -- sinal de controle MUX Read Register 2
+        regWrite      : out bit;                      -- sinal de controle Write Register
+        aluSrc        : out bit;                      -- sinal de controle MUX entrada B ULA
+        alu_control   : out bit_vector (3 downto 0);  -- sinal de controle da ULA
+        branch        : out bit;                      -- sinal de controle desvio condicional
+        uncondBranch  : out bit;                      -- sinal de controle desvio incondicional
+        memRead       : out bit;                      -- sinal de controle leitura RAM dados
+        memWrite      : out bit;                      -- sinal de controle leitura RAM dados
+        memToReg      : out bit                       -- sinal de controle MUX Write Data
     );
 end entity unidadeControle;
 

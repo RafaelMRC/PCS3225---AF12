@@ -1,3 +1,14 @@
+-----------------Sistemas Digitais II-------------------------------------
+-- Arquivo   : polilegv8.vhd
+-- Projeto   : AF12 Parte 3 SDII 2025 - Projeto Integrado do Processador PoliLEGv8 Monociclo
+-------------------------------------------------------------------------
+-- Autores:     Grupo T2G07     
+--      12684531 Antonio Torres Rocha (Turma 3)
+--      15637418 Guilherme Jun Gondo (Turma 1)
+--      15485340 Rafael Moreno Rachel Carvalho (Turma 1)
+--      15487892 Samuel Henrique de Jesus da Silva (Turma 2)
+-------------------------------------------------------------------------
+
 entity polilegv8 is
     port (
         clock : in bit;
@@ -10,7 +21,6 @@ architecture estrutural of polilegv8 is
 
     --------------------------------------------------------------------
     -- Declaração dos componentes 
-    -- (todos usando apenas bit e bit_vector)
     --------------------------------------------------------------------
     component fluxoDados is
         port(
