@@ -96,6 +96,7 @@ begin
     -- Válido para operações aritméticas
     Ov <= carry(63) xor carry(64);
 
-    Z <= '1' when result_int = (others => '0') else '0'; -- Flag zero
+      Z <= '1' when result_int = (result_int'range => '0') else '0';
+
 
 end architecture ula_arch;
