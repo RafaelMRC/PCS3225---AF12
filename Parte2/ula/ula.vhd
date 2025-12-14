@@ -94,7 +94,7 @@ begin
 
     -- Flag Overflow (carry into MSB XOR carry out MSB)
     -- Válido para operações aritméticas
-    Ov <= carry(63) xor carry(64);
+    Ov <= (carry(63) xor carry(64)) when binvert_s = '0' else carry(64);
 
      Z <= '1' when result_int = (result_int'range => '0') else '0';
 
