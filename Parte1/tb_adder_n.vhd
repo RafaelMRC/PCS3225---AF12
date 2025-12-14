@@ -80,11 +80,11 @@ begin
         in0_64 <= (others => '0'); in1_64 <= (others => '0');
         wait for 10 ns;
 
-        assert (sum_16 = (others => '0') and cOut_16 = '0')
+        assert (sum_16 = (sum_16'range => '0') and cOut_16 = '0')
             report "Erro caso minimo - 16 bits" severity error;
-        assert (sum_32 = (others => '0') and cOut_32 = '0')
+        assert (sum_32 = (sum_32'range => '0') and cOut_32 = '0')
             report "Erro caso minimo - 32 bits" severity error;
-        assert (sum_64 = (others => '0') and cOut_64 = '0')
+        assert (sum_64 = (sum_64'range => '0') and cOut_64 = '0')
             report "Erro caso minimo - 64 bits" severity error;
 
         -- CASO 2: Apenas uns
@@ -93,13 +93,13 @@ begin
         in0_64 <= (others => '1'); in1_64 <= (others => '1');
         wait for 10 ns;
 
-        assert (sum_16 = (others => '0') and cOut_16 = '1')
+        assert (sum_16 = (sum_16'range => '0') and cOut_16 = '1')
             report "Erro caso maximo - 16 bits" severity error;
-        assert (sum_32 = (others => '0') and cOut_32 = '1')
+        assert (sum_32 = (sum_32'range => '0') and cOut_32 = '1')
             report "Erro caso maximo - 32 bits" severity error;
-        assert (sum_64 = (others => '0') and cOut_64 = '1')
+        assert (sum_64 = (sum_64'range => '0') and cOut_64 = '1')
             report "Erro caso maximo - 64 bits" severity error;
-
+            
         -- CASO 3: Intermediario sem carry
         in0_16 <= "0000000000001111"; in1_16 <= "0000000000001111";
         in0_32 <= (31 downto 4 => '0') & "1111";
@@ -121,11 +121,11 @@ begin
         in0_64 <= (others => '1'); in1_64 <= (63 downto 1 => '0') & '1';
         wait for 10 ns;
 
-        assert (sum_16 = (others => '0') and cOut_16 = '1')
+        assert (sum_16 = (sum_16'range => '0') and cOut_16 = '1')
             report "Erro intermediario com carry - 16 bits" severity error;
-        assert (sum_32 = (others => '0') and cOut_32 = '1')
+        assert (sum_32 = (sum_32'range => '0') and cOut_32 = '1')
             report "Erro intermediario com carry - 32 bits" severity error;
-        assert (sum_64 = (others => '0') and cOut_64 = '1')
+        assert (sum_64 = (sum_64'range => '0') and cOut_64 = '1')
             report "Erro intermediario com carry - 64 bits" severity error;
 
         report "Fim do Testbench do Somador Binario - Todos os testes passaram"
@@ -134,3 +134,4 @@ begin
     end process;
 
 end architecture testbench;
+
